@@ -1,25 +1,8 @@
-import connectDb from "./connectDb";
+const { connectDb } = require("./connectDb");
 
 const collectionName = "kids";
 
-export function getAllKids(req, res) {
-  const db = connectDb();
-  db.collection(collectionName)
-    .get()
-    .then((snapshot) => {
-      const kidArray = snapshot.docs.map((doc) => {
-        let kid = doc.data();
-        kid.id = doc.id;
-        return kid;
-      });
-      res.send(kidArray);
-    })
-    .catch((err) => {
-      res.status(500).send(err);
-    });
-}
-
-export function getKidById(req, res) {
+exports.getKidById = (req, res) => {
   const { kidId } = req.params;
   if (!kidId) {
     res.status(401).send("Invalid request");
@@ -37,9 +20,9 @@ export function getKidById(req, res) {
     .catch((err) => {
       res.status(500).send(err);
     });
-}
+};
 
-export function addKid(req, res) {
+exports.addKid = (req, res) => {
   if (!req.body) {
     res.status(401).send("Invalid request");
     return;
@@ -53,9 +36,9 @@ export function addKid(req, res) {
     .catch((err) => {
       res.status(500).send(err);
     });
-}
+};
 
-export function deleteKid(req, res) {
+exports.deleteKid = (req, res) => {
   const { kidId } = req.params;
   if (!kidId) {
     res.status(401).send("Invalid request");
@@ -71,4 +54,4 @@ export function deleteKid(req, res) {
     .catch((err) => {
       res.status(500).send(err);
     });
-}
+};

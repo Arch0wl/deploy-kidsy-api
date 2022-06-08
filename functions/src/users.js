@@ -1,27 +1,10 @@
-import connectDb from "../connectDb.js";
+const { connectDb } = require("./connectDb");
 
 const collectionName = "users";
 
-export function getAllUsers(req, res) {
-  const db = connectDb();
-  db.collection(collectionName)
-    .get()
-    .then((snapshot) => {
-      const userArray = snapshot.docs.map((doc) => {
-        let user = doc.data();
-        user.id = doc.id;
-        return user;
-      });
-      res.send(userArray);
-    })
-    .catch((err) => {
-      res.status(500).send(err);
-    });
-}
-
-export function getUserById(req, res) {
+exports.getUserById = (req, res) => {
   const { userId } = req.params;
-  if (!usertId) {
+  if (!userId) {
     res.status(401).send("Invalid request");
     return;
   }
@@ -37,9 +20,9 @@ export function getUserById(req, res) {
     .catch((err) => {
       res.status(500).send(err);
     });
-}
+};
 
-export function addUser(req, res) {
+exports.addUser = (req, res) => {
   if (!req.body) {
     res.status(401).send("Invalid request");
     return;
@@ -53,4 +36,4 @@ export function addUser(req, res) {
     .catch((err) => {
       res.user(500).send(err);
     });
-}
+};

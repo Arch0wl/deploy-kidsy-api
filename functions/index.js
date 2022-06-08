@@ -1,13 +1,9 @@
-import functions from "firebase-functions";
-import express from "express";
-import cors from "cors";
-import { getAllUsers, getUserById, addUser } from "./src/users.js";
-import { addKid, deleteKid, getKidById } from "./src/kids.js";
-import {
-  addCraftwork,
-  deleteCraftwork,
-  getCraftworkById,
-} from "./src/craftworks.js";
+const functions = require("firebase-functions");
+const express = require("express");
+const cors = require("cors");
+const { getUserById, addUser } = require("./src/users.js");
+const { addKid, deleteKid, getKidById } = require("./src/kids");
+const { addCraftwork, deleteCraftwork } = require("./src/craftworks.js");
 
 //import jwt from "jsonwebtoken";
 //import mySecretKey from "./secret.js";
@@ -17,14 +13,22 @@ app.use(cors());
 app.use(express.json());
 
 // setup my routes:
-app.get("/users", getAllUsers);
+//TODO: check in postman
 app.get("/users/:userId", getUserById);
+
+// TODO: should generate user info + all kids
+// app.get("/users/:userId/kids", getUserKids);
+
+// ALL END POINTS BELOW WORKS
+app.get("/kids/:kidId", getKidById);
+app.post("/craftworks/:kidId", addCraftwork);
 app.post("/users", addUser);
 app.post("/kids", addKid);
-app.get("/kids", getKidById);
-app.delete("/kids", deleteKid);
-app.get("/craftworks", getCraftworkById);
-app.post("/craftworks", addCraftwork);
-app.delete("/craftworks", deleteCraftwork);
 
-export const api = functions.https.onRequest(app);
+//TODO: check in postnam
+app.delete("/kids/:kidId", deleteKid);
+
+//TODO: implement the same way as addCraftwork
+app.delete("/craftworks/:craftworkId", deleteCraftwork);
+
+exports.app = functions.https.onRequest(app);

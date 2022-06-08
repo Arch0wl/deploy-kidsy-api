@@ -1,44 +1,50 @@
-import connectDb from "./connectDb.js";
+const { connectDb } = require("./connectDb");
+const admin = require("firebase-admin");
 
-const collectionName = "craftworks";
+const collectionName = "kids";
 
-export function addCraftwork(req, res) {
-  if (!req.body) {
+exports.addCraftwork = (req, res) => {
+  const { kidId } = req.params;
+
+  if (!kidId) {
     res.status(401).send("Invalid request");
     return;
   }
   const db = connectDb();
   db.collection(collectionName)
-    .add(req.body)
-    .then((doc) => {
-      res.send("Craftwork created " + doc.id);
-    })
-    .catch((err) => {
-      res.status(500).send(err);
-    });
-}
-
-export function getCraftworkById(req, res) {
-  const { craftworkId } = req.params;
-  if (!craftworkId) {
-    res.status(401).send("Invalid request");
-    return;
-  }
-  const db = connectDb();
-  db.collection(collectionName)
-    .doc(craftworkId)
+    .doc(kidId)
     .get()
     .then((doc) => {
-      let kid = doc.data();
-      kid.id = doc.id;
-      res.send(kid);
-    })
-    .catch((err) => {
-      res.status(500).send(err);
+      let kidObj = doc.data();
+      if (!kidObj.craftworks) kidObj.craftworks = [];
+      const craftworkObj = {
+        id: kidObj.craftworks.length,
+        title: req.body.title,
+        image: req.body.image,
+        createdAt: admin.firestore.Timestamp.now(),
+      };
+      kidObj.craftworks.push(craftworkObj);
+      db.collection(collectionName)
+        .doc(kidId)
+        .update(kidObj)
+        .then(() => {
+          res.send(kidObj);
+        })
+        .catch((err) => {
+          res.status(500).send(err);
+        });
     });
-}
 
-export function deleteCraftwork(req, res) {
+  //
+  //   .then((doc) => {
+  //     res.send("Craftwork created " + doc.id);
+  //   })
+  //   .catch((err) => {
+  //     res.status(500).send(err);
+  //   });
+};
+
+exports.deleteCraftwork = (req, res) => {
   const { craftworkId } = req.params;
   if (!craftworkId) {
     res.status(401).send("Invalid request");
@@ -51,4 +57,4 @@ export function deleteCraftwork(req, res) {
     .then(() => {
       res.status(500).send(err);
     });
-}
+};

@@ -1,14 +1,14 @@
-import { initializeApp, getApp, cert } from "firebase-admin";
-import myCredentials from "./credentials.js";
-import { getFirestore } from "firebase-admin/firestore";
+const admin = require("firebase-admin");
+const myCredentials = require("./credentials.json");
 
-export default function connectDb() {
-  if (getApps().length === 0) {
+exports.connectDb = () => {
+  if (!admin.apps.length) {
     // are we already connected?
-    initializeApp({
+    admin.initializeApp({
       // if not, connect
-      credential: cert(myCredentials),
+      credential: admin.credential.cert(myCredentials),
     });
-  } // now we have access to the database
-  return getFirestore();
-}
+    //} // now we have access to the database
+  }
+  return admin.firestore();
+};
