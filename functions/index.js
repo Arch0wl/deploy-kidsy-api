@@ -28,7 +28,7 @@ app.post("/kids", addKid);
 //TODO: check in postnam
 app.delete("/kids/:kidId", deleteKid);
 
-//TODO: implement the same way as addCraftwork
+//TODO: implement the same way as addCraftwork see craftworks
 app.delete("/craftworks/:craftworkId", deleteCraftwork);
 
 exports.app = functions.https.onRequest(app);
