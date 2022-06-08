@@ -13,22 +13,19 @@ app.use(cors());
 app.use(express.json());
 
 // setup my routes:
-//TODO: check in postman
-app.get("/users/:userId", getUserById);
 
 // TODO: should generate user info + all kids
 // app.get("/users/:userId/kids", getUserKids);
 
 // ALL END POINTS BELOW WORKS
+app.get("/users/:userId", getUserById);
 app.get("/kids/:kidId", getKidById);
 app.post("/craftworks/:kidId", addCraftwork);
 app.post("/users", addUser);
 app.post("/kids", addKid);
-
-//TODO: check in postnam
 app.delete("/kids/:kidId", deleteKid);
 
-//TODO: implement the same way as addCraftwork see craftworks
+//TODO: implement the same way as deleteCraftwork see craftworks
 app.delete("/craftworks/:craftworkId", deleteCraftwork);
 
 exports.app = functions.https.onRequest(app);
