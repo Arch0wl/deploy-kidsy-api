@@ -29,7 +29,11 @@ exports.addUser = (req, res) => {
   }
   const db = connectDb();
   db.collection(collectionName)
-    .add(req.body)
+    .add({
+      name: req.body.name,
+      email: req.body.email,
+      password: req.body.password,
+    })
     .then((doc) => {
       res.send("User created " + doc.id);
     })

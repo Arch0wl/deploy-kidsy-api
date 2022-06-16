@@ -2,15 +2,17 @@ const functions = require("firebase-functions");
 const express = require("express");
 const cors = require("cors");
 const { getUserById, addUser } = require("./src/users.js");
-const { addKid, deleteKid, getKidById } = require("./src/kids");
+const { addKid, deleteKid, getKidById, getKids } = require("./src/kids.js");
 const { addCraftwork, deleteCraftwork } = require("./src/craftworks.js");
 
 //import jwt from "jsonwebtoken";
 //import mySecretKey from "./secret.js";
 
 const app = express();
-app.use(cors());
+
+// app.use(cors({ origin: true }));
 app.use(express.json());
+app.use(cors());
 
 // setup my routes:
 
@@ -24,8 +26,9 @@ app.post("/craftworks/:kidId", addCraftwork);
 app.post("/users", addUser);
 app.post("/kids", addKid);
 app.delete("/kids/:kidId", deleteKid);
+app.get("/kids/user/:userId", getKids);
 
 //TODO: implement the same way as deleteCraftwork see craftworks
-app.delete("/craftworks/:craftworkId", deleteCraftwork);
+app.delete("/craftworks/:kidId", deleteCraftwork);
 
 exports.app = functions.https.onRequest(app);

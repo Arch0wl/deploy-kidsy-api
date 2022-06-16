@@ -45,13 +45,46 @@ exports.deleteKid = (req, res) => {
     return;
   }
   const db = connectDb();
-  db.collection("kids")
+
+  db.collection(collectionName)
+    // db.collection("kids")
     .doc(kidId)
     .delete()
-    .then(() => {
-      res.send("Kid deleted.");
+    .then((doc) => {
+      let kid = doc.data();
+      kid.id = doc.id;
+      res.status(200).send("Kid deleted" + kid.id);
     })
     .catch((err) => {
       res.status(500).send(err);
     });
+};
+
+exports.getKids = (req, res) => {
+  // if (!kidId) {
+  //   res.status(401).send("Invalid request");
+  //   return;
+  // }
+  const db = connectDb();
+
+  const { userId } = req.params;
+  console.log(userId);
+  const kids = [];
+  db.collection(collectionName)
+    .where("userId", "==", userId)
+    .get()
+    .then((collection) => {
+      //console.log(doc.data());
+      //let kids = doc.data();
+      collection.docs.map((doc) => {
+        const kid = {
+          firstName: doc.data().firstName,
+          lastName: doc.data().lastName,
+          dateOfBirth: doc.data().dateOfBirth,
+          kidId: doc.id,
+        };
+        kids.push(kid);
+      });
+    })
+    .then(() => res.status(200).send(kids));
 };
