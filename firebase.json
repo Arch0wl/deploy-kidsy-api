@@ -15,7 +15,7 @@
   "emulators": {
     "hosting": {
       "host": "localhost",
-      "port": "5040"
+      "port": "4060"
     }
   }
 }
